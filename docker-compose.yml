@@ -1,0 +1,13 @@
+include:
+ - docker-compose.dependencies.yml
+  
+services:
+  monkeyApi:
+    build:
+      context: ./src/MonkeyShelter.Api
+      dockerfile: Dockerfile
+    image: monkeyshelter-api:latest
+    ports:
+      - "5242:5242"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
