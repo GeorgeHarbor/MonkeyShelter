@@ -11,3 +11,12 @@ services:
       - "5242:5242"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
+  monkeyAuth:
+    build:
+      context: ./src/MonkeyShelter.Auth
+      dockerfile: Dockerfile
+    image: monkeyshelter-auth:latest
+    ports:
+      - "5270:5270"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
