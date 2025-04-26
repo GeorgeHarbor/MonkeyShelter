@@ -1,14 +1,12 @@
 ﻿
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc;
 
 using MonkeyShelter.Auth.Data;
+using MonkeyShelter.Auth.Extensions;
 using MonkeyShelter.Auth.Models;
 using MonkeyShelter.Auth.Models.Dtos;
+using MonkeyShelter.Auth.Services;
 
 namespace MonkeyShelter.Auth.Endpoints;
 
@@ -16,56 +14,84 @@ public static class AuthEndpoints
 {
     public static void MapAuthEndpoint(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/register", Register);
-        app.MapPost("/login", Login);
+        var grp = app.MapGroup("/auth").WithTags("Auth");
+
+        grp.MapGet("/users/{id}", GetUserById)
+            .WithName("GetUserById")
+            .Produces<UserDto>(200)
+            .Produces(404);
+
+        grp.MapPost("/register", Register)
+            .WithName("Register")
+            .Produces<UserDto>(201)
+            .Produces<ValidationProblemDetails>(401);
+
+        grp.MapPost("/login", Login)
+            .WithName("Login")
+            .Produces<string>(200)
+            .Produces(401);
+    }
+
+    private static async Task<IResult> GetUserById(
+            string id,
+            UserManager<User> userManager)
+    {
+        var user = await userManager.FindByIdAsync(id);
+        return user is null
+            ? TypedResults.NotFound()
+            : TypedResults.Ok(user.MapToDto());
     }
 
     private static async Task<IResult> Login(LoginRequest req,
     SignInManager<User> signInManager,
     UserManager<User> userManager,
-    IConfiguration config)
+    IConfiguration config,
+    ITokenService tokenService,
+    ILogger<Program> logger)
     {
+        logger.LogInformation("Login requested for {Username}", req.Username);
         var signInResult = await signInManager
             .PasswordSignInAsync(req.Username, req.Password, isPersistent: false, lockoutOnFailure: false);
 
         if (!signInResult.Succeeded)
-            return Results.Unauthorized();
+        {
 
-        // 2. Retrieve the user & roles
+            logger.LogWarning("Login FAILED for {Username}", req.Username);
+            return TypedResults.Unauthorized();
+        }
+
         var user = await userManager.FindByNameAsync(req.Username)!;
-        var roles = await userManager.GetRolesAsync(user!);
+        string jwt = tokenService.CreateToken(user!);
 
-        // 3. Build claims for the token
-        var claims = new List<Claim>
-    {
-        new(JwtRegisteredClaimNames.Sub, user!.Id),
-        new(ClaimTypes.Name, user.UserName!),
-        new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-    };
-        claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
-
-        // 4. Generate JWT
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            issuer: config["Jwt:Issuer"],
-            audience: config["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(3),
-            signingCredentials: creds
-        );
-
-        string jwt = new JwtSecurityTokenHandler().WriteToken(token);
+        logger.LogInformation("Login SUCCEEDED for {Username}", req.Username);
 
         return TypedResults.Ok(jwt);
     }
 
-    private static async Task<IResult> Register(RegisterRequest req, DataContext db, UserManager<User> userManager)
+    private static async Task<IResult> Register(
+        RegisterRequest req,
+        DataContext db,
+        UserManager<User> userManager,
+        ILogger<Program> logger)
     {
+        logger.LogInformation("Registering {Username}", req.Username);
         var user = new User { UserName = req.Username, Email = req.Email };
         var result = await userManager.CreateAsync(user, req.Password);
 
-        return !result.Succeeded ? TypedResults.BadRequest(result.Errors) : TypedResults.Created();
+        if (!result.Succeeded)
+        {
+            logger.LogWarning("Registration failed for {Username}: {Errors}",
+                 req.Username,
+                 result.Errors.Select(e => e.Description));
+            return TypedResults.ValidationProblem(
+                result.Errors.ToDictionary(e => e.Code, e => new[] { e.Description })
+            );
+        }
+
+        return Results.CreatedAtRoute(
+          "GetUserById",
+          new { id = user.Id },
+          user.MapToDto()
+        );
     }
 }

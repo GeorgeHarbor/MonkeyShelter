@@ -1,5 +1,5 @@
 using System.Text;
-
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +10,21 @@ using MonkeyShelter.Auth.Endpoints;
 using MonkeyShelter.Auth.Models;
 using MonkeyShelter.Auth.Services;
 
+using Serilog;
+
+
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .Build();
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 builder.Services.Configure<JwtSettings>(
         builder.Configuration.GetSection("Jwt")
@@ -56,6 +70,22 @@ builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
+
+app.UseExceptionHandler(errApp =>
+    errApp.Run(async ctx =>
+    {
+        var ex = ctx.Features
+                    .Get<IExceptionHandlerFeature>()?
+                    .Error;
+
+        await Results.Problem(
+            title: "Internal Server Error",
+            detail: ex?.Message,
+            statusCode: 500,
+            instance: ctx.Request.Path
+        ).ExecuteAsync(ctx);
+    })
+);
 
 app.UseAuthentication();
 app.UseAuthorization();
