@@ -24,8 +24,18 @@ public class DataContext(DbContextOptions options) : DbContext(options)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<ManagerShelter>()
-            .HasNoKey()
-            .ToTable("ManagerShelters");
+        modelBuilder.Entity<ManagerShelter>(b =>
+           {
+               b.ToTable("ManagerShelters");
+
+               // tell EF that (ManagerId, ShelterId) is the primary key
+               b.HasKey(ms => new { ms.ManagerId, ms.ShelterId });
+
+               // configure the FK → Shelter
+               b.HasOne(ms => ms.Shelter)
+                .WithMany(s => s.ManagerShelters)
+                .HasForeignKey(ms => ms.ShelterId)
+                .OnDelete(DeleteBehavior.Cascade);
+           });
     }
 }
