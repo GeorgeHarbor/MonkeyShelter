@@ -13,7 +13,8 @@ public class UnitOfWork(
     IRepository<ReportCache> reportCaches,
     IRepository<AuditLog> auditLogs,
     IRepository<ManagerShelter> managerShelters,
-    IRepository<Shelter> shelters) : IUnitOfWork, IDisposable
+    IRepository<Shelter> shelters,
+    IRepository<Species> species) : IUnitOfWork, IDisposable
 {
     private readonly DataContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
@@ -26,6 +27,7 @@ public class UnitOfWork(
     public IRepository<AuditLog> AuditLogs { get; } = auditLogs;
     public IRepository<ManagerShelter> ManagerShelters { get; } = managerShelters;
     public IRepository<Shelter> Shelters { get; } = shelters;
+    public IRepository<Species> Species { get; } = species;
 
     public Task<int> SaveChangesAsync(CancellationToken ct = default)
     {

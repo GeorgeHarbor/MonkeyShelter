@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MonkeyShelter.Application\MonkeyShelter.Application.csproj" />
+    <ProjectReference Include="..\MonkeyShelter.Domain\MonkeyShelter.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,6 +3,7 @@ using System;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MonkeyShelter.Infrastructure;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MonkeyShelter.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250427153628_MonkeyChange")]
+    partial class MonkeyChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,14 +136,14 @@ namespace MonkeyShelter.Infrastructure.Migrations
                     b.Property<Guid>("ShelterId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("SpeciesId")
+                    b.Property<Guid>("SpecieId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ShelterId");
 
-                    b.HasIndex("SpeciesId");
+                    b.HasIndex("SpecieId");
 
                     b.ToTable("Monkeys");
                 });
@@ -190,7 +193,7 @@ namespace MonkeyShelter.Infrastructure.Migrations
                     b.ToTable("Shelters");
                 });
 
-            modelBuilder.Entity("MonkeyShelter.Domain.Species", b =>
+            modelBuilder.Entity("MonkeyShelter.Domain.Specie", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -297,15 +300,15 @@ namespace MonkeyShelter.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MonkeyShelter.Domain.Species", "Species")
+                    b.HasOne("MonkeyShelter.Domain.Specie", "Specie")
                         .WithMany()
-                        .HasForeignKey("SpeciesId")
+                        .HasForeignKey("SpecieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Shelter");
 
-                    b.Navigation("Species");
+                    b.Navigation("Specie");
                 });
 
             modelBuilder.Entity("MonkeyShelter.Domain.VetCheckSchedule", b =>

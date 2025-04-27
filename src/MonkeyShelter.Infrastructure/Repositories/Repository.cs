@@ -42,4 +42,13 @@ public class Repository<T>(DataContext ctx) : IRepository<T> where T : class
             .ToListAsync(ct);
     }
 
+    public async Task<int> CountAsync(CancellationToken ct = default)
+    {
+        return await _ctx.Set<T>().CountAsync(ct);
+    }
+
+    public async Task<int> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken ct = default)
+    {
+        return await _ctx.Set<T>().Where(predicate).CountAsync(ct);
+    }
 }
