@@ -1,3 +1,5 @@
+using Carter;
+
 using Microsoft.EntityFrameworkCore;
 
 using MonkeyShelter.Application;
@@ -14,6 +16,7 @@ builder.Services
     .AddScoped(typeof(IRepository<>), typeof(Repository<>))
     .AddScoped<IUnitOfWork, UnitOfWork>();
 
+builder.Services.AddCarter();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,6 +27,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapCarter();
 
 using (var scope = app.Services.CreateScope())
 {
