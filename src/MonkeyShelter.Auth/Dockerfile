@@ -1,23 +1,28 @@
+# stage 1: build
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copy project file and restore dependencies
+# 1) copy only the Auth csproj and restore its NuGet packages
 COPY MonkeyShelter.Auth.csproj ./
 RUN dotnet restore "MonkeyShelter.Auth.csproj"
 
-# Copy source code and publish
+# 2) copy the rest of the Auth source and publish
 COPY . ./
-RUN dotnet publish "MonkeyShelter.Auth.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "MonkeyShelter.Auth.csproj" \
+    -c Release \
+    -o /app/publish \
+    /p:UseAppHost=false
 
+# stage 2: runtime
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
+
+# copy published output
 COPY --from=build /app/publish .
 
-# Set environment and URLs from launchSettings
+# environment & port
 ENV ASPNETCORE_ENVIRONMENT=Development
 ENV ASPNETCORE_URLS="http://+:5270"
-
-# Expose ports for HTTP and HTTPS
 EXPOSE 5270
 
 ENTRYPOINT ["dotnet", "MonkeyShelter.Auth.dll"]
