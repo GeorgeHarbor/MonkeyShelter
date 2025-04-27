@@ -11,6 +11,7 @@ using MonkeyShelter.Auth.Models;
 using MonkeyShelter.Auth.Services;
 
 using Serilog;
+using MonkeyShelter.Auth;
 
 
 var configuration = new ConfigurationBuilder()
@@ -59,6 +60,8 @@ builder.Services.AddAuthentication(opt =>
                 ClockSkew = TimeSpan.Zero
             };
         });
+builder.Services.AddMessaging(builder.Configuration);
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddOpenApi();

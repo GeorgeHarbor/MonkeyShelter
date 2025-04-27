@@ -2,6 +2,7 @@ using Carter;
 
 using Microsoft.EntityFrameworkCore;
 
+using MonkeyShelter.Api.Extensions;
 using MonkeyShelter.Application;
 using MonkeyShelter.Infrastructure;
 
@@ -17,6 +18,8 @@ builder.Services
     .AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddCarter();
+builder.Services.AddMessaging(builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

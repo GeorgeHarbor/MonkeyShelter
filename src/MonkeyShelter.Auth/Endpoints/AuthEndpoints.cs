@@ -1,7 +1,10 @@
 ﻿
+using MassTransit;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using MonkeyShelter.Application.Events;
 using MonkeyShelter.Auth.Data;
 using MonkeyShelter.Auth.Extensions;
 using MonkeyShelter.Auth.Models;
@@ -32,6 +35,7 @@ public static class AuthEndpoints
             .Produces(401);
     }
 
+    #region Methods
     private static async Task<IResult> GetUserById(
             string id,
             UserManager<User> userManager)
@@ -72,7 +76,8 @@ public static class AuthEndpoints
         RegisterRequest req,
         DataContext db,
         UserManager<User> userManager,
-        ILogger<Program> logger)
+        ILogger<Program> logger,
+        IPublishEndpoint publisher)
     {
         logger.LogInformation("Registering {Username}", req.Username);
         var user = new User { UserName = req.Username, Email = req.Email };
@@ -88,10 +93,18 @@ public static class AuthEndpoints
             );
         }
 
+        await publisher.Publish(new UserRegistered(
+                    Guid.Parse(user.Id),
+                    user.Email,
+                    Guid.Parse(req.ShelterId),
+                    DateTime.Now
+                    ));
+
         return Results.CreatedAtRoute(
           "GetUserById",
           new { id = user.Id },
           user.MapToDto()
         );
     }
+    #endregion
 }

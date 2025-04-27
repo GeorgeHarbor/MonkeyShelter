@@ -24,4 +24,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MonkeyShelter.Application\MonkeyShelter.Application.csproj" />
+    <ProjectReference Include="..\MonkeyShelter.Infrastructure\MonkeyShelter.Infrastructure.csproj" />
+  </ItemGroup>
+    
 </Project>
