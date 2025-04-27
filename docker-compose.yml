@@ -4,19 +4,26 @@ include:
 services:
   monkeyApi:
     build:
-      context: ./src/MonkeyShelter.Api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: src/MonkeyShelter.Api/Dockerfile
     image: monkeyshelter-api:latest
     ports:
       - "5242:5242"
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=monkeyservice;Username=user;Password=pass;
+    depends_on:
+      postgres:
+        condition: service_healthy
+      
   monkeyAuth:
     build:
-      context: ./src/MonkeyShelter.Auth
+      context: ./src/MonkeyShelter.Auth/
       dockerfile: Dockerfile
     image: monkeyshelter-auth:latest
     ports:
       - "5270:5270"
+    depends_on:
+      postgres:
+        condition: service_healthy
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=monkeyauth;Username=user;Password=pass;
