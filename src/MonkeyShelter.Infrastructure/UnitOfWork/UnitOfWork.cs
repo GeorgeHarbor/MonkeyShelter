@@ -11,7 +11,6 @@ public class UnitOfWork(
     IRepository<WeightHistory> weightHistories,
     IRepository<VetCheckSchedule> vetChecks,
     IRepository<ReportCache> reportCaches,
-    IRepository<AuditLog> auditLogs,
     IRepository<ManagerShelter> managerShelters,
     IRepository<Shelter> shelters,
     IRepository<Species> species) : IUnitOfWork, IDisposable
@@ -24,7 +23,6 @@ public class UnitOfWork(
     public IRepository<WeightHistory> WeightHistories { get; } = weightHistories;
     public IRepository<VetCheckSchedule> VetChecks { get; } = vetChecks;
     public IRepository<ReportCache> ReportCaches { get; } = reportCaches;
-    public IRepository<AuditLog> AuditLogs { get; } = auditLogs;
     public IRepository<ManagerShelter> ManagerShelters { get; } = managerShelters;
     public IRepository<Shelter> Shelters { get; } = shelters;
     public IRepository<Species> Species { get; } = species;

@@ -16,7 +16,6 @@ public class DataContext(DbContextOptions options) : DbContext(options)
 
     public DbSet<VetCheckSchedule> VetCheckSchedules { get; set; }
     public DbSet<ReportCache> ReportCaches { get; set; }
-    public DbSet<AuditLog> AuditLogs { get; set; }
 
     public DbSet<ManagerShelter> ManagerShelters { get; set; }
 
@@ -28,10 +27,8 @@ public class DataContext(DbContextOptions options) : DbContext(options)
            {
                b.ToTable("ManagerShelters");
 
-               // tell EF that (ManagerId, ShelterId) is the primary key
                b.HasKey(ms => new { ms.ManagerId, ms.ShelterId });
 
-               // configure the FK → Shelter
                b.HasOne(ms => ms.Shelter)
                 .WithMany(s => s.ManagerShelters)
                 .HasForeignKey(ms => ms.ShelterId)

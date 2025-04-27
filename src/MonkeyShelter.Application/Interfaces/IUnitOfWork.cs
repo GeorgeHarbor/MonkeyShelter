@@ -11,7 +11,6 @@ public interface IUnitOfWork
     IRepository<WeightHistory> WeightHistories { get; }
     IRepository<VetCheckSchedule> VetChecks { get; }
     IRepository<ReportCache> ReportCaches { get; }
-    IRepository<AuditLog> AuditLogs { get; }
     IRepository<ManagerShelter> ManagerShelters { get; }
     IRepository<Shelter> Shelters { get; }
     IRepository<Species> Species { get; }
