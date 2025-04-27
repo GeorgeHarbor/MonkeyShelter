@@ -1,9 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+
+using MonkeyShelter.Application;
+using MonkeyShelter.Domain;
+using MonkeyShelter.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddDbContext<DataContext>(opt => opt.UseNpgsql(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+builder.Services
+    .AddScoped(typeof(IRepository<>), typeof(Repository<>))
+    .AddScoped<IUnitOfWork, UnitOfWork>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
