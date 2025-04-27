@@ -11,6 +11,7 @@ services:
       - "5242:5242"
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=monkeyservice;Username=user;Password=pass;
+      - ConnectionStrings__RabbitMq=rabbitmq://rabbitmq:5672
     depends_on:
       postgres:
         condition: service_healthy
@@ -27,3 +28,17 @@ services:
         condition: service_healthy
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=monkeyauth;Username=user;Password=pass;
+      - ConnectionStrings__RabbitMq=rabbitmq://rabbitmq:5672
+      
+  vet-scheduler:
+    build:
+      context: .
+      dockerfile: src/MonkeyShelter.Worker.VetScheduler/Dockerfile
+    depends_on:
+    rabbitmq:
+      condition: service_healthy
+    postgres:
+      condition: service_healthy
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=monkeyservice;Username=user;Password=pass;
+      - ConnectionStrings__RabbitMq=rabbitmq://rabbitmq:5672
