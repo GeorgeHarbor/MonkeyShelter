@@ -36,7 +36,7 @@ app.MapCarter();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<DataContext>();
-    db.Database.Migrate();
+    await db.SeedAsync();
 }
 
 app.Run();
