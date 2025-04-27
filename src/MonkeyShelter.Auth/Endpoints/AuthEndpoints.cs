@@ -93,12 +93,13 @@ public static class AuthEndpoints
             );
         }
 
+        logger.LogError("RADI");
         await publisher.Publish(new UserRegistered(
                     Guid.Parse(user.Id),
                     user.Email,
                     Guid.Parse(req.ShelterId),
                     DateTime.Now
-                    ));
+                    ), ctx => ctx.Headers.Set("MT-Message-Name", nameof(UserRegistered)));
 
         return Results.CreatedAtRoute(
           "GetUserById",

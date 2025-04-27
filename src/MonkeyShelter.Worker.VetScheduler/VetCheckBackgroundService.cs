@@ -14,7 +14,7 @@ public class VetCheckBackgroundService(
 {
     private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
     private readonly ILogger<VetCheckBackgroundService> _log = log;
-    private readonly TimeSpan _interval = TimeSpan.FromHours(1);
+    private readonly TimeSpan _interval = TimeSpan.FromMinutes(1);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -53,6 +53,7 @@ public class VetCheckBackgroundService(
                         ),
                         stoppingToken
                     );
+                    _log.LogInformation("Event published");
                 }
 
             }

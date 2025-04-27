@@ -18,8 +18,8 @@ services:
       
   monkeyAuth:
     build:
-      context: ./src/MonkeyShelter.Auth/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: src/MonkeyShelter.Auth/Dockerfile
     image: monkeyshelter-auth:latest
     ports:
       - "5270:5270"
@@ -35,10 +35,23 @@ services:
       context: .
       dockerfile: src/MonkeyShelter.Worker.VetScheduler/Dockerfile
     depends_on:
-    rabbitmq:
-      condition: service_healthy
-    postgres:
-      condition: service_healthy
+      - postgres
+      - rabbitmq
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=monkeyservice;Username=user;Password=pass;
       - ConnectionStrings__RabbitMq=rabbitmq://rabbitmq:5672
+      
+  audit:
+    build:
+      context: .
+      dockerfile: src/MonkeyShelter.Audit/Dockerfile
+    image: monkeyshelter-audit:latest
+    ports:
+      - "5247:5247"
+    environment:
+      - ConnectionStrings__AuditDatabase=Host=postgres;Port=5432;Database=monkeyaudit;Username=user;Password=pass;
+      - RabbitMq__Host=rabbitmq://rabbitmq:5672
+      - RabbitMq__Username=user
+      - RabbitMq__Password=pass
+    depends_on:
+      - postgres

@@ -1,2 +1,3 @@
 CREATE DATABASE monkeyAuth;
 CREATE DATABASE monkeyService;
+CREATE DATABASE monkeyAudit;
