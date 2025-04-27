@@ -8,4 +8,6 @@ public class Monkey
     public required Shelter Shelter { get; set; }
     public float CurrentWeight { get; set; }
     public DateTime ArrivalDate { get; set; }
+    public DateTime DepartureDate { get; set; }
+    public bool IsActive { get; set; } = true;
 }
