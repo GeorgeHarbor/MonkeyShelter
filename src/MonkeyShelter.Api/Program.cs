@@ -1,10 +1,14 @@
 using Carter;
 
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
 using MonkeyShelter.Api.Extensions;
 using MonkeyShelter.Application;
+using MonkeyShelter.Application.Exceptions;
+using MonkeyShelter.Application.Interfaces;
 using MonkeyShelter.Infrastructure;
+using MonkeyShelter.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +21,11 @@ builder.Services
     .AddScoped(typeof(IRepository<>), typeof(Repository<>))
     .AddScoped<IUnitOfWork, UnitOfWork>();
 
+builder.Services.AddScoped<IMonkeyService, MonkeyService>();
+builder.Services.AddScoped<IMonkeyRepository, MonkeyRepository>();
+
 builder.Services.AddCarter();
+
 builder.Services.AddMessaging(builder.Configuration);
 
 var app = builder.Build();

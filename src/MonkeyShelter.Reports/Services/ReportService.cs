@@ -4,15 +4,12 @@ using Microsoft.Extensions.Caching.Distributed;
 
 using MonkeyShelter.Application;
 using MonkeyShelter.Application.Interfaces;
-using MonkeyShelter.Domain;
-using MonkeyShelter.Infrastructure.Repositories;
 
 namespace MonkeyShelter.Reports;
 
-public class ReportService(IDistributedCache cache, IUnitOfWork uow, IMonkeyRepository monkeyRepo, IArrivalRepository arrivalRepo)
+public class ReportService(IDistributedCache cache, IMonkeyRepository monkeyRepo, IArrivalRepository arrivalRepo)
 {
     private readonly IDistributedCache _cache = cache;
-    private readonly IUnitOfWork _uow = uow;
     private readonly IMonkeyRepository _monkeyRepo = monkeyRepo;
     private readonly IArrivalRepository _arrivalRepo = arrivalRepo;
 

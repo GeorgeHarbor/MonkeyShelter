@@ -4,9 +4,10 @@ using MonkeyShelter.Domain;
 
 namespace MonkeyShelter.Application;
 
-public class MonkeyService(IUnitOfWork uow) : IMonkeyService
+public class MonkeyService(IUnitOfWork uow, IMonkeyRepository repo) : IMonkeyService
 {
     private readonly IUnitOfWork _uow = uow;
+    private readonly IMonkeyRepository _repo = repo;
 
     public async Task<Monkey> ArriveMonkeyAsync(ArriveMonkeyRequest req, CancellationToken ct = default)
     {
@@ -23,6 +24,18 @@ public class MonkeyService(IUnitOfWork uow) : IMonkeyService
 
         var shelter = await _uow.Shelters.GetByIdAsync(req.ShelterId, ct)
             ?? throw new EntityNotFoundException(nameof(Shelter), req.ShelterId);
+
+        var monkeysInShelter = await _repo.ListWithIncludesAsync(m => m.Species.Id == req.SpeciesId);
+
+        var monkeyCount = monkeysInShelter.Count;
+
+        if (monkeyCount > 90)
+            throw new BusinessRuleException("Shelters can only house up to 90 monkeys.");
+
+        var speciesCount = monkeysInShelter.Select(m => m.Species).Count();
+
+        if (speciesCount > 15)
+            throw new BusinessRuleException("Shelters can only house up to 15 species.");
 
         var monkey = new Monkey()
         {
@@ -44,41 +57,12 @@ public class MonkeyService(IUnitOfWork uow) : IMonkeyService
         };
         await _uow.Arrivals.AddAsync(arrival, ct);
 
-
         await _uow.SaveChangesAsync(ct);
 
         return monkey;
     }
 
-    public async Task CompleteVetCheckAsync(
-        CompleteVetCheckRequest req,
-        CancellationToken ct = default)
-    {
-        var schedule = await _uow.VetChecks
-            .ListAsync(v =>
-                v.Monkey.Id == req.MonkeyId &&
-                v.ScheduledDate.Date == DateTime.Now.Date &&
-                v.CompletedDate == null,
-                ct);
-
-        var entry = schedule[0]
-            ?? throw new BusinessRuleException(
-                $"No pending vet check scheduled on {DateTime.Now.Date:yyyy-MM-dd} for monkey {req.MonkeyId}.");
-
-        entry.CompletedDate = req.CompletedDate;
-
-        var next = new VetCheckSchedule
-        {
-            Id = Guid.NewGuid(),
-            Monkey = entry.Monkey,
-            ScheduledDate = req.CompletedDate.AddDays(60)
-        };
-        await _uow.VetChecks.AddAsync(next, ct);
-
-        await _uow.SaveChangesAsync(ct);
-    }
-
-    public async Task DepartMonkeyAsync(DepartMonkeyRequest req, CancellationToken ct = default)
+    public async Task<Monkey> DepartMonkeyAsync(DepartMonkeyRequest req, CancellationToken ct = default)
     {
         var today = req.DepartureDate.Date;
         var todaysDepartures = await _uow.Departures.CountAsync(d => d.Date.Date == today, ct);
@@ -89,11 +73,11 @@ public class MonkeyService(IUnitOfWork uow) : IMonkeyService
         if ((todaysDepartures - todaysArrivals) > 2)
             throw new BusinessRuleException($"Departures minus arrivals cannot exceed 2.");
 
-        var monkey = await _uow.Monkeys.GetByIdAsync(req.MonkeyId, ct) ?? throw new EntityNotFoundException(nameof(Monkey), req.MonkeyId);
+        var monkey = await _repo.GetByIdWithIncludesAsync(m => m.Id == req.MonkeyId) ?? throw new EntityNotFoundException(nameof(Monkey), req.MonkeyId);
 
-        var monkeysInSpeciesCount = await _uow.Monkeys.CountAsync(m => m.Species.Id == monkey.Species.Id && m.IsActive, ct);
+        var monkeysInSpecies = await _repo.ListWithIncludesAsync(m => m.Species.Id == monkey.Species.Id);
 
-        if (monkeysInSpeciesCount <= 1)
+        if (monkeysInSpecies.Count <= 1)
             throw new BusinessRuleException($"At least one monkey of a species must be in shelter.");
 
         Departure departure = new()
@@ -101,25 +85,29 @@ public class MonkeyService(IUnitOfWork uow) : IMonkeyService
             Id = Guid.NewGuid(),
             Monkey = monkey,
             Date = today,
-            WeightAtDeparture = monkey.CurrentWeight
+            WeightAtDeparture = req.WeightAtDeparture
         };
 
         await _uow.Departures.AddAsync(departure, ct);
 
         monkey.IsActive = false;
         monkey.DepartureDate = today;
+        monkey.CurrentWeight = req.WeightAtDeparture;
 
         _uow.Monkeys.Update(monkey);
 
         await _uow.SaveChangesAsync(ct);
+        return monkey;
     }
 
-    public async Task UpdateWeightAsync(UpdateWeightRequest req, CancellationToken ct = default)
+    public async Task<(float, float)> UpdateWeightAsync(UpdateWeightRequest req, CancellationToken ct = default)
     {
         var monkey = await _uow.Monkeys.GetByIdAsync(req.MonkeyId, ct) ?? throw new EntityNotFoundException(nameof(Monkey), req.MonkeyId);
+        var oldWeight = monkey.CurrentWeight;
 
         monkey.CurrentWeight = req.NewWeight;
 
         await _uow.SaveChangesAsync(ct);
+        return (oldWeight, monkey.CurrentWeight);
     }
 }

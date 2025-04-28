@@ -42,6 +42,23 @@ public class Repository<T>(DataContext ctx) : IRepository<T> where T : class
             .ToListAsync(ct);
     }
 
+    public async Task<List<T>> ListAsync(
+        Expression<Func<T, bool>>? predicate,
+        CancellationToken ct,
+        params Expression<Func<T, object>>[] includes
+    )
+    {
+        IQueryable<T> query = _ctx.Set<T>();
+        // apply includes
+        foreach (var include in includes)
+            query = query.Include(include);
+
+        if (predicate != null)
+            query = query.Where(predicate);
+
+        return await query.ToListAsync(ct);
+    }
+
     public async Task<int> CountAsync(CancellationToken ct = default)
     {
         return await _ctx.Set<T>().CountAsync(ct);
@@ -51,4 +68,5 @@ public class Repository<T>(DataContext ctx) : IRepository<T> where T : class
     {
         return await _ctx.Set<T>().Where(predicate).CountAsync(ct);
     }
+
 }

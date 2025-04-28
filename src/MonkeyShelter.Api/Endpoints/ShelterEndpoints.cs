@@ -1,7 +1,6 @@
 ﻿using Carter;
 
 using MonkeyShelter.Application;
-using MonkeyShelter.Infrastructure;
 
 namespace MonkeyShelter.Api;
 

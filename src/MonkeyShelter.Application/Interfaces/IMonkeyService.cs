@@ -19,16 +19,11 @@ public interface IMonkeyService
     ///   • at least one monkey of that species remains
     /// Emits a MonkeyDeparted event on success.
     /// </summary>
-    Task DepartMonkeyAsync(DepartMonkeyRequest req, CancellationToken ct = default);
+    Task<Monkey> DepartMonkeyAsync(DepartMonkeyRequest req, CancellationToken ct = default);
 
     /// <summary>
     /// Updates a monkey’s weight, logs the change,
     /// and emits a MonkeyWeightChanged event.
     /// </summary>
-    Task UpdateWeightAsync(UpdateWeightRequest req, CancellationToken ct = default);
-
-    /// <summary>
-    /// Marks a scheduled vet check as completed (or triggers scheduling logic).
-    /// </summary>
-    Task CompleteVetCheckAsync(CompleteVetCheckRequest req, CancellationToken ct = default);
+    Task<(float, float)> UpdateWeightAsync(UpdateWeightRequest req, CancellationToken ct = default);
 }

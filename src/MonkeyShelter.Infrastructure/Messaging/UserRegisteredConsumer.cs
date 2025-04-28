@@ -8,9 +8,10 @@ using MonkeyShelter.Domain;
 
 namespace MonkeyShelter.Infrastructure;
 
-public class UserRegisteredConsumer(IUnitOfWork uow) : IConsumer<UserRegistered>
+public class UserRegisteredConsumer(IUnitOfWork uow, IPublishEndpoint publisher) : IConsumer<UserRegistered>
 {
     private readonly IUnitOfWork _uow = uow;
+    private readonly IPublishEndpoint _publisher = publisher;
 
     public async Task Consume(ConsumeContext<UserRegistered> context)
     {
@@ -28,5 +29,7 @@ public class UserRegisteredConsumer(IUnitOfWork uow) : IConsumer<UserRegistered>
         }, context.CancellationToken);
 
         await _uow.SaveChangesAsync(context.CancellationToken);
+        await _publisher.Publish(new ManagerShelterAssigned(msg.UserId, msg.ShelterId, msg.RegisteredAt),
+                ctx => ctx.Headers.Set("MT-Message-Name", nameof(ManagerShelterAssigned)));
     }
 }

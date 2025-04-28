@@ -10,6 +10,11 @@ public interface IRepository<T> where T : class
             Expression<Func<T, bool>> predicate,
             CancellationToken ct = default);
 
+    Task<List<T>> ListAsync(
+    Expression<Func<T, bool>>? predicate = null,
+    CancellationToken ct = default,
+    params Expression<Func<T, object>>[] includes
+);
     Task AddAsync(T entity, CancellationToken ct = default);
     void Update(T entity);
     void Delete(T entity);
@@ -18,4 +23,5 @@ public interface IRepository<T> where T : class
     Task<int> CountAsync(
             Expression<Func<T, bool>> predicate,
             CancellationToken ct = default);
+
 }
