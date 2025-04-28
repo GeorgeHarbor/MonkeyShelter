@@ -16,7 +16,8 @@ public static class ResponseExtensions
             monkey.Species?.Name ?? "<no-species>",
             monkey.Shelter?.Name ?? "<no-shelter>",
             monkey.ArrivalDate,
-            monkey.IsActive
+            monkey.IsActive,
+            monkey.CurrentWeight
         );
     }
 }

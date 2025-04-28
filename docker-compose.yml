@@ -71,9 +71,13 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=monkeyservice;Username=user;Password=pass;
       - ConnectionStrings__Redis=redis:6379
+      - RabbitMq__Host=rabbitmq://rabbitmq:5672
+      - RabbitMq__Username=user
+      - RabbitMq__Password=pass
     depends_on:
       - postgres
       - redis
+      - rabbitmq
 
 volumes:
   postgres-data:

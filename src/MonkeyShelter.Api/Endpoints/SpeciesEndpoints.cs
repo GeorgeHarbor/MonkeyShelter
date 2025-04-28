@@ -1,7 +1,6 @@
 ﻿using Carter;
 
 using MonkeyShelter.Application;
-using MonkeyShelter.Infrastructure;
 
 namespace Monkeyspecie.Api;
 
@@ -13,9 +12,9 @@ public class SpeciesEndpoints : ICarterModule
 
         grp.MapGet("", GetAll);
         grp.MapGet("/{id}", GetById);
-        grp.MapPost("", CreateSpecie);
-        grp.MapDelete("", DeleteSpecie);
-        grp.MapPut("/{id}", UpdateSpecie);
+        grp.MapPost("", CreateSpecie).RequireAuthorization();
+        grp.MapDelete("", DeleteSpecie).RequireAuthorization();
+        grp.MapPut("/{id}", UpdateSpecie).RequireAuthorization();
     }
 
     private async Task<IResult> UpdateSpecie(IUnitOfWork uow, Guid id, UpdateSpeciesRequest req)

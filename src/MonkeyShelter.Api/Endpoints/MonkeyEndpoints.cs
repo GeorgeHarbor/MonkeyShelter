@@ -19,9 +19,9 @@ public class MonkeyEndpoints : ICarterModule
         var grp = app.MapGroup("/monkeys").WithTags("Monkeys");
         grp.MapGet("", GetAllMonkeys);
         grp.MapGet("/{id}", GetMonkeyById);
-        grp.MapPost("/create/arrival", MonkeyArrival);
-        grp.MapDelete("/create/departure", MonkeyDeparture);
-        grp.MapPut("/update/weight", MonkeyWeightChange);
+        grp.MapPost("/create/arrival", MonkeyArrival).RequireAuthorization();
+        grp.MapDelete("/create/departure", MonkeyDeparture).RequireAuthorization();
+        grp.MapPut("/update/weight", MonkeyWeightChange).RequireAuthorization();
     }
 
     private async Task<IResult> MonkeyWeightChange([FromBody] UpdateWeightRequest req, IMonkeyService svc, IPublishEndpoint publisher, ILogger<MonkeyEndpoints> logger, CancellationToken ct)
@@ -69,7 +69,7 @@ public class MonkeyEndpoints : ICarterModule
 
     public async Task<IResult> GetAllMonkeys([FromServices] IMonkeyRepository repo)
     {
-        var monkeys = await repo.ListAllWithIncludesAsync();
+        var monkeys = await repo.ListWithIncludesAsync(m => m.IsActive);
 
         if (monkeys.Count == 0)
             return TypedResults.NoContent();

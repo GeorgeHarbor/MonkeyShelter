@@ -69,7 +69,16 @@ public static class AuthEndpoints
 
         logger.LogInformation("Login SUCCEEDED for {Username}", req.Username);
 
-        return TypedResults.Ok(jwt);
+        UserDto dto = new()
+        {
+            Id = user!.Id,
+            UserName = user.UserName!,
+            Email = user!.Email!,
+            Token = jwt
+        };
+
+
+        return TypedResults.Ok(dto);
     }
 
     private static async Task<IResult> Register(

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+using MonkeyShelter.Api.Extensions;
 using MonkeyShelter.Application;
 using MonkeyShelter.Application.Interfaces;
 using MonkeyShelter.Infrastructure;
@@ -24,12 +25,14 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IMonkeyRepository, MonkeyRepository>();
 builder.Services.AddScoped<IArrivalRepository, ArrivalsRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddMessaging(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
     app.UseSwaggerUI(opt => opt.SwaggerEndpoint("/openapi/v1.json", "swagger"));
 }
 app.MapGet("/reports/count-per-species", async (ReportService svc) =>

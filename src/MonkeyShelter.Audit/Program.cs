@@ -48,6 +48,21 @@ builder.Services.AddMassTransit(x => x.UsingRabbitMq((context, cfg) =>
 
                e.Bind<MonkeyArrived>();
                e.Handler<MonkeyArrived>(ctx => HandleAuditEvent(ctx));
+
+               e.Bind<MonkeyDeparted>();
+               e.Handler<MonkeyDeparted>(ctx => HandleAuditEvent(ctx));
+
+               e.Bind<MonkeyWeightChanged>();
+               e.Handler<MonkeyWeightChanged>(ctx => HandleAuditEvent(ctx));
+
+               e.Bind<ManagerShelterAssigned>();
+               e.Handler<ManagerShelterAssigned>(ctx => HandleAuditEvent(ctx));
+
+               e.Bind<ReportGenerated>();
+               e.Handler<ReportGenerated>(ctx => HandleAuditEvent(ctx));
+
+               e.Bind<ShelterCreated>();
+               e.Handler<ShelterCreated>(ctx => HandleAuditEvent(ctx));
            });
 
     }));

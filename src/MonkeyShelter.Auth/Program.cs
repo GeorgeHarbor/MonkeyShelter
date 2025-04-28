@@ -31,6 +31,11 @@ builder.Services.Configure<JwtSettings>(
         builder.Configuration.GetSection("Jwt")
         );
 
+builder.Services.AddCors(options => options.AddPolicy("AllowSpecificOrigins",
+        policy => policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials()));
 var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
 var jwtKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions!.Key));
 
@@ -89,7 +94,7 @@ app.UseExceptionHandler(errApp =>
         ).ExecuteAsync(ctx);
     })
 );
-
+app.UseCors("AllowSpecificOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
 

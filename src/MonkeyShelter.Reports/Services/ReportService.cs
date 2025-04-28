@@ -1,17 +1,21 @@
 ﻿using System.Text.Json;
 
+using MassTransit;
+
 using Microsoft.Extensions.Caching.Distributed;
 
 using MonkeyShelter.Application;
+using MonkeyShelter.Application.Events;
 using MonkeyShelter.Application.Interfaces;
 
 namespace MonkeyShelter.Reports;
 
-public class ReportService(IDistributedCache cache, IMonkeyRepository monkeyRepo, IArrivalRepository arrivalRepo)
+public class ReportService(IDistributedCache cache, IMonkeyRepository monkeyRepo, IArrivalRepository arrivalRepo, IPublishEndpoint publisher)
 {
     private readonly IDistributedCache _cache = cache;
     private readonly IMonkeyRepository _monkeyRepo = monkeyRepo;
     private readonly IArrivalRepository _arrivalRepo = arrivalRepo;
+    private readonly IPublishEndpoint _publisher = publisher;
 
     public async Task<Dictionary<string, int>> GetCountPerSpeciesAsync()
     {
@@ -35,6 +39,8 @@ public class ReportService(IDistributedCache cache, IMonkeyRepository monkeyRepo
 
         await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(data), options);
 
+        await _publisher.Publish(new ReportGenerated(cacheKey, JsonSerializer.Serialize(data), DateTime.UtcNow),
+                ctx => ctx.Headers.Set("MT-Message-Name", nameof(ReportGenerated)));
         return data;
     }
     public async Task<Dictionary<string, int>> GetArrivalsInRangeAsync(
@@ -42,10 +48,8 @@ public class ReportService(IDistributedCache cache, IMonkeyRepository monkeyRepo
         DateTime to,
         CancellationToken cancellationToken = default)
     {
-        // 1) Build a cache key that encodes the date range
         string cacheKey = $"report:arrivals:{from:yyyyMMdd}:{to:yyyyMMdd}";
 
-        // 2) Try to get from Redis
         var cached = await _cache.GetStringAsync(cacheKey, cancellationToken);
         if (cached is not null)
         {
@@ -54,23 +58,23 @@ public class ReportService(IDistributedCache cache, IMonkeyRepository monkeyRepo
         }
         var fromUtc = DateTime.SpecifyKind(from.Date, DateTimeKind.Utc);
         var toUtc = DateTime.SpecifyKind(to.Date, DateTimeKind.Utc);
-        // 3) If missing, query your DB for arrivals in [from…to]
+
         var arrivals = await _arrivalRepo.ListWithIncludesAsync(a => a.Date <= toUtc && a.Date >= fromUtc);
 
-        // 4) Aggregate counts by species
         var result = arrivals
             .Select(m => m.Monkey)
             .GroupBy(a => a.Species.Name)
             .ToDictionary(g => g.Key, g => g.Count());
 
-        // 5) Cache the JSON for 5 minutes (tune as you like)
         var cacheOptions = new DistributedCacheEntryOptions
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15)
         };
         var payload = JsonSerializer.Serialize(result);
         await _cache.SetStringAsync(cacheKey, payload, cacheOptions, cancellationToken);
 
+        await _publisher.Publish(new ReportGenerated(cacheKey, JsonSerializer.Serialize(payload), DateTime.UtcNow),
+                ctx => ctx.Headers.Set("MT-Message-Name", nameof(ReportGenerated)), cancellationToken);
         return result;
     }
 }

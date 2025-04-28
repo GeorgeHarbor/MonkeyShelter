@@ -1,6 +1,9 @@
 ﻿using Carter;
 
+using MassTransit;
+
 using MonkeyShelter.Application;
+using MonkeyShelter.Application.Events;
 
 namespace MonkeyShelter.Api;
 
@@ -12,9 +15,9 @@ public class ShelterEndpoints : ICarterModule
 
         grp.MapGet("", GetAll);
         grp.MapGet("/{id}", GetById);
-        grp.MapPost("", CreateShelter);
-        grp.MapDelete("", DeleteShelter);
-        grp.MapPut("/{id}", UpdateShelter);
+        grp.MapPost("", CreateShelter).RequireAuthorization();
+        grp.MapDelete("", DeleteShelter).RequireAuthorization();
+        grp.MapPut("/{id}", UpdateShelter).RequireAuthorization();
     }
 
     private async Task<IResult> UpdateShelter(IUnitOfWork uow, Guid id, UpdateShelterRequest req)
@@ -32,11 +35,14 @@ public class ShelterEndpoints : ICarterModule
         return TypedResults.NoContent();
     }
 
-    private async Task<IResult> CreateShelter(IUnitOfWork uow, CreateShelterRequest req)
+    private async Task<IResult> CreateShelter(IUnitOfWork uow, CreateShelterRequest req, IPublishEndpoint publisher, CancellationToken ct)
     {
         var shelter = req.MapToShelter();
-        await uow.Shelters.AddAsync(shelter);
-        await uow.SaveChangesAsync();
+        await uow.Shelters.AddAsync(shelter, ct);
+        await uow.SaveChangesAsync(ct);
+
+        await publisher.Publish(new ShelterCreated(shelter.Id, shelter.Name, shelter.Location, DateTime.UtcNow),
+                ctx => ctx.Headers.Set("MT-Message-Name", nameof(ShelterCreated)), ct);
         return TypedResults.Ok();
     }
 
