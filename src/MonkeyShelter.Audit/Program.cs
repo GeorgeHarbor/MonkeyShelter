@@ -43,6 +43,8 @@ builder.Services.AddMassTransit(x => x.UsingRabbitMq((context, cfg) =>
                e.Bind<UserRegistered>();
                e.Handler<UserRegistered>(ctx => HandleAuditEvent(ctx));
 
+               e.Bind<VetCheckScheduled>();
+               e.Handler<VetCheckScheduled>(ctx => HandleAuditEvent(ctx));
            });
 
     }));

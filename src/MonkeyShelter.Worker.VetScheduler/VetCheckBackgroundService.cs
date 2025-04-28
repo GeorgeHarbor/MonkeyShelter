@@ -2,6 +2,7 @@
 
 using MonkeyShelter.Application;
 using MonkeyShelter.Application.Events;
+using MonkeyShelter.Application.Interfaces;
 using MonkeyShelter.Domain;
 
 namespace MonkeyShelter.Worker.VetScheduler;
@@ -13,7 +14,7 @@ public class VetCheckBackgroundService(
 {
     private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
     private readonly ILogger<VetCheckBackgroundService> _log = log;
-    private readonly TimeSpan _interval = TimeSpan.FromMinutes(1);
+    private readonly TimeSpan _interval = TimeSpan.FromMinutes(15);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -26,9 +27,10 @@ public class VetCheckBackgroundService(
                 using var scope = _scopeFactory.CreateScope();
                 var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                 var publisher = scope.ServiceProvider.GetRequiredService<IPublishEndpoint>();
+                var vetRepo = scope.ServiceProvider.GetRequiredService<IVetChecksRepository>();
 
                 var now = DateTime.UtcNow;
-                var due = await uow.VetChecks.ListAsync(v => v.ScheduledDate <= now && v.CompletedDate == null, stoppingToken);
+                var due = await vetRepo.ListWithIncludesAsync(v => v.ScheduledDate <= now.Date && v.CompletedDate == null);
 
                 foreach (var v in due)
                 {
@@ -46,11 +48,11 @@ public class VetCheckBackgroundService(
                     await uow.SaveChangesAsync(stoppingToken);
                     await publisher.Publish(
                         new VetCheckScheduled(
-                            next.Id,            // ← your event’s own Id
-                            next.Monkey.Id,     // ← the monkey’s Id
-                            next.ScheduledDate  // ← the scheduled date
+                            next.Id,
+                            next.Monkey.Id,
+                            next.ScheduledDate
                         ),
-                        stoppingToken
+                        ctx => ctx.Headers.Set("MT-Message-Name", nameof(VetCheckScheduled)), stoppingToken
                     );
                     _log.LogInformation("Event published");
                 }

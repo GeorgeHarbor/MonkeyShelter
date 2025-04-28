@@ -19,11 +19,12 @@ public static class MassTransitExtensions
             x.UsingRabbitMq((context, cfg) =>
             {
                 // Configure RabbitMQ host from configuration
-                cfg.Host(config.GetConnectionString("RabbitMq"), h =>
-                {
-                    h.Username(config["RabbitMq:Username"]!);
-                    h.Password(config["RabbitMq:Password"]!);
-                });
+                var rmq = config.GetSection("RabbitMq");
+                cfg.Host(rmq["Host"], h =>
+                        {
+                            h.Username(rmq["Username"]!);
+                            h.Password(rmq["Password"]!);
+                        });
 
                 // Automatically configure endpoints for all registered consumers
                 cfg.ConfigureEndpoints(context);

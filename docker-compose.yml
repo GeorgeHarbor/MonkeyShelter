@@ -2,7 +2,7 @@ include:
  - docker-compose.dependencies.yml
   
 services:
-  monkeyApi:
+  api:
     build:
       context: .
       dockerfile: src/MonkeyShelter.Api/Dockerfile
@@ -15,7 +15,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      
+
   monkeyAuth:
     build:
       context: .
@@ -23,38 +23,44 @@ services:
     image: monkeyshelter-auth:latest
     ports:
       - "5270:5270"
-    depends_on:
-      postgres:
-        condition: service_healthy
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=monkeyauth;Username=user;Password=pass;
       - ConnectionStrings__RabbitMq=rabbitmq://rabbitmq:5672
-      
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   vet-scheduler:
     build:
       context: .
       dockerfile: src/MonkeyShelter.Worker.VetScheduler/Dockerfile
-    depends_on:
-      - postgres
-      - rabbitmq
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=monkeyservice;Username=user;Password=pass;
-      - ConnectionStrings__RabbitMq=rabbitmq://rabbitmq:5672
-      
+      - RabbitMq__Host=rabbitmq://rabbitmq:5672
+      - RabbitMq__Username=user
+      - RabbitMq__Password=pass
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      api:
+        condition: service_started
+        
   audit:
     build:
       context: .
       dockerfile: src/MonkeyShelter.Audit/Dockerfile
     image: monkeyshelter-audit:latest
-    ports:
-      - "5247:5247"
     environment:
       - ConnectionStrings__AuditDatabase=Host=postgres;Port=5432;Database=monkeyaudit;Username=user;Password=pass;
       - RabbitMq__Host=rabbitmq://rabbitmq:5672
       - RabbitMq__Username=user
       - RabbitMq__Password=pass
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+
   reports:
     build:
       context: .
@@ -68,3 +74,7 @@ services:
     depends_on:
       - postgres
       - redis
+
+volumes:
+  postgres-data:
+  redis-data:
