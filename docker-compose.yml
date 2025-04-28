@@ -55,3 +55,16 @@ services:
       - RabbitMq__Password=pass
     depends_on:
       - postgres
+  reports:
+    build:
+      context: .
+      dockerfile: src/MonkeyShelter.Reports/Dockerfile
+    image: monkeyshelter-reports:latest
+    ports:
+      - "5109:5109"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=monkeyservice;Username=user;Password=pass;
+      - ConnectionStrings__Redis=redis:6379
+    depends_on:
+      - postgres
+      - redis

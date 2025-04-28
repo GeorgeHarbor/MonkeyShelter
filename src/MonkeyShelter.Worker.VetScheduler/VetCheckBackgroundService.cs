@@ -1,5 +1,4 @@
-﻿
-using MassTransit;
+﻿using MassTransit;
 
 using MonkeyShelter.Application;
 using MonkeyShelter.Application.Events;
