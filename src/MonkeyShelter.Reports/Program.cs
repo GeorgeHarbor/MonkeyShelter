@@ -6,6 +6,9 @@ using MonkeyShelter.Application.Interfaces;
 using MonkeyShelter.Infrastructure;
 using MonkeyShelter.Infrastructure.Repositories;
 using MonkeyShelter.Reports;
+using MonkeyShelter.Reports.Services;
+
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +29,15 @@ builder.Services.AddScoped<IMonkeyRepository, MonkeyRepository>();
 builder.Services.AddScoped<IArrivalRepository, ArrivalsRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddMessaging(builder.Configuration);
+builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+    ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")!
+    ));
+
+builder.Services.AddSingleton<IReportCacheInvalidator, ReportCacheInvalidator>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

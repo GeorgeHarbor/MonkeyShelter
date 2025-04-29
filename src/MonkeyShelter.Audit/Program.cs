@@ -21,7 +21,7 @@ builder.Services.AddMassTransit(x => x.UsingRabbitMq((context, cfg) =>
             h.Password(rmq["Password"]!);
         });
 
-        cfg.ReceiveEndpoint("audit-queue", e =>
+        cfg.ReceiveEndpoint("main-queue", e =>
            {
                e.ConfigureConsumeTopology = false;
                async Task HandleAuditEvent<T>(ConsumeContext<T> ctx) where T : class

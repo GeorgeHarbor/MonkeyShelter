@@ -12,6 +12,8 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=monkeyservice;Username=user;Password=pass;
       - ConnectionStrings__RabbitMq=rabbitmq://rabbitmq:5672
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5242
     depends_on:
       postgres:
         condition: service_healthy
@@ -26,6 +28,8 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=monkeyauth;Username=user;Password=pass;
       - ConnectionStrings__RabbitMq=rabbitmq://rabbitmq:5672
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5270
     depends_on:
       postgres:
         condition: service_healthy
@@ -39,6 +43,7 @@ services:
       - RabbitMq__Host=rabbitmq://rabbitmq:5672
       - RabbitMq__Username=user
       - RabbitMq__Password=pass
+      - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
       postgres:
         condition: service_healthy
@@ -54,6 +59,7 @@ services:
     image: monkeyshelter-audit:latest
     environment:
       - ConnectionStrings__AuditDatabase=Host=postgres;Port=5432;Database=monkeyaudit;Username=user;Password=pass;
+      - ASPNETCORE_ENVIRONMENT=Development
       - RabbitMq__Host=rabbitmq://rabbitmq:5672
       - RabbitMq__Username=user
       - RabbitMq__Password=pass
@@ -74,6 +80,8 @@ services:
       - RabbitMq__Host=rabbitmq://rabbitmq:5672
       - RabbitMq__Username=user
       - RabbitMq__Password=pass
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5109
     depends_on:
       - postgres
       - redis
