@@ -9,7 +9,7 @@
 .cards-grid {
   display: grid;
   gap: 16px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-template-rows: 1fr 1fr;
   grid-template-areas:
     "monkeys shelters"
@@ -25,11 +25,17 @@
   mat-card-content {
     flex: 1;
     overflow: auto;
+    max-height: 40vh;
   }
 }
 
 .monkeys {
   grid-area: monkeys;
+
+  & mat-card-content {
+    max-height: 85vh;
+    height: 100%;
+  }
 }
 
 .shelters {
@@ -38,4 +44,19 @@
 
 .species {
   grid-area: species;
+}
+
+@media (max-width: 1240px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, auto);
+    grid-template-areas:
+      "monkeys"
+      "shelters"
+      "species";
+  }
+
+  .dashboard-sidebar {
+    display: none !important;
+  }
 }

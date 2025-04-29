@@ -15,7 +15,7 @@ public static class ResponseExtensions
             monkey.CurrentWeight,
             monkey.Species?.Name ?? "<no-species>",
             monkey.Shelter?.Name ?? "<no-shelter>",
-            monkey.ArrivalDate,
+            monkey.ArrivalDate.ToString("MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture),
             monkey.IsActive,
             monkey.CurrentWeight
         );

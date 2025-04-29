@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
@@ -9,8 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { authEnvironment } from '../../environments/environment';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ShelterService } from '../../services/shelter.service';
 import { MatSelectModule } from '@angular/material/select';
 import { AuthService } from '../../services/auth.service'
@@ -88,7 +87,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.shelterService.getShelters().subscribe({
+    this.shelterService.getAll().subscribe({
       next: (data) => {
         this.shelters = data;
       },

@@ -6,16 +6,11 @@
       </mat-card-header>
       <mat-card-content>
         <scrollable-table
-          [columns]="[
-          { field: 'id',   header: 'ID' },
-          { field: 'name', header: 'Name' },
-          { field: 'age',  header: 'Age' }
-          ]"
+          [columns]="columns"
           [data]="monkeys"
           [showActions]="true"
           (edit)="onEdit($event)"
           (delete)="onDelete($event)"
-          class="full-height"
         ></scrollable-table>
       </mat-card-content>
     </mat-card>
@@ -25,8 +20,13 @@
         <mat-card-title>Shelters</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <!-- your shelters table -->
-        <table>…</table>
+        <scrollable-table
+          [columns]="columnsShelter"
+          [data]="shelters"
+          [showActions]="false"
+          (edit)="onEdit($event)"
+          (delete)="onDelete($event)"
+        ></scrollable-table>
       </mat-card-content>
     </mat-card>
 
@@ -35,8 +35,13 @@
         <mat-card-title>Species</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <!-- your species table -->
-        <table>…</table>
+        <scrollable-table
+          [columns]="columnsSpecies"
+          [data]="species"
+          [showActions]="false"
+          (edit)="onEdit($event)"
+          (delete)="onDelete($event)"
+        ></scrollable-table>
       </mat-card-content>
     </mat-card>
   </div>

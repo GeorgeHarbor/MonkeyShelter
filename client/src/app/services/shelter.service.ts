@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { environment } from "../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { Shelter } from "../models/Shelter";
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,7 @@ export class ShelterService {
 
   constructor(private http: HttpClient) { }
 
-  getShelters(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  getAll(): Observable<Shelter[]> {
+    return this.http.get<Shelter[]>(this.apiUrl);
   }
 }

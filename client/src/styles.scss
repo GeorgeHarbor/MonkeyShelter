@@ -11,3 +11,24 @@ body {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: var(--mat-sys-on-background)
 }
+
+@media (max-width: 1240px) {
+  .dashboard-sidebar {
+    position: absolute;
+    z-index: 1;
+  }
+
+  nav {
+    width: 7vw !important;
+  }
+
+  .sidebar-content {
+    display: none;
+  }
+
+  .dashboard-content {
+    margin-left: 7vw !important;
+    padding: unset !important;
+  }
+
+}
