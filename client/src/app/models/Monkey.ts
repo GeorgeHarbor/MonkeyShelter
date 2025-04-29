@@ -3,6 +3,6 @@ export interface Monkey {
   name: string;
   species: string;
   age: number;
-  weightKg: number;
+  weight: number;
   arrivalDate: Date;
 }

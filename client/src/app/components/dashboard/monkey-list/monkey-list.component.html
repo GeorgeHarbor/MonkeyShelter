@@ -1,8 +1,11 @@
 <div class="monkey-list-layout">
   <div class="cards-grid">
     <mat-card class="card monkeys">
-      <mat-card-header>
+      <mat-card-header class="monkey-header">
         <mat-card-title>Monkeys</mat-card-title>
+        <button mat-icon-button color="warn" (click)="addMonkeyArrival()">
+          <mat-icon>add</mat-icon>
+        </button>
       </mat-card-header>
       <mat-card-content>
         <scrollable-table

@@ -19,9 +19,9 @@ public class MonkeyEndpoints : ICarterModule
         var grp = app.MapGroup("/monkeys").WithTags("Monkeys");
         grp.MapGet("", GetAllMonkeys);
         grp.MapGet("/{id}", GetMonkeyById);
-        grp.MapPost("/create/arrival", MonkeyArrival).RequireAuthorization();
-        grp.MapDelete("/create/departure", MonkeyDeparture).RequireAuthorization();
-        grp.MapPut("/update/weight", MonkeyWeightChange).RequireAuthorization();
+        grp.MapPost("", MonkeyArrival).RequireAuthorization();
+        grp.MapDelete("", MonkeyDeparture).RequireAuthorization();
+        grp.MapPut("", MonkeyWeightChange).RequireAuthorization();
     }
 
     private async Task<IResult> MonkeyWeightChange([FromBody] UpdateWeightRequest req, IMonkeyService svc, IPublishEndpoint publisher, ILogger<MonkeyEndpoints> logger, CancellationToken ct)
@@ -51,7 +51,7 @@ public class MonkeyEndpoints : ICarterModule
                 ctx => ctx.Headers.Set("MT-Message-Name", nameof(MonkeyArrived)), ct);
 
         var response = monkey.MapToResponse();
-        return TypedResults.Created("/create/departure", response);
+        return TypedResults.Ok(response);
     }
 
     private async Task<IResult> MonkeyArrival([FromBody] ArriveMonkeyRequest req, IMonkeyService svc, IPublishEndpoint publisher, CancellationToken ct)

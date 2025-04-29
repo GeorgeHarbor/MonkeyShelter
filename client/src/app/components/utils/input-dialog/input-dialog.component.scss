@@ -1,0 +1,13 @@
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 1rem 0;
+  width: 300px;
+  /* space between fields */
+}
+
+.dialog-field {
+  width: 100%;
+  /* make each field stretch to container width */
+}

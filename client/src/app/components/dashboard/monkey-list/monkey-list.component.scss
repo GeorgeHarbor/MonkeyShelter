@@ -34,7 +34,6 @@
 
   & mat-card-content {
     max-height: 85vh;
-    height: 100%;
   }
 }
 
@@ -59,4 +58,17 @@
   .dashboard-sidebar {
     display: none !important;
   }
+}
+
+.monkey-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card mat-card-header {
+  padding-bottom: 1rem;
+}
+
+.card .add-button {
+  cursor: pointer;
 }

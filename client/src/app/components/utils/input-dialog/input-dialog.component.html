@@ -1,0 +1,51 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="dialog-form">
+    <ng-container *ngFor="let field of data.fields">
+      <mat-form-field appearance="outline" class="dialog-field">
+        <mat-label>
+          {{ field.label }}
+          <span *ngIf="field.required">*</span>
+        </mat-label>
+
+        <!-- dropdown if type==='select' -->
+        <ng-container *ngIf="field.type === 'select'; else textField">
+          <mat-select [formControlName]="field.name">
+            <mat-option
+              *ngFor="let opt of field.options"
+              [value]="opt.value"
+            >
+              {{ opt.viewValue }}
+            </mat-option>
+          </mat-select>
+        </ng-container>
+
+        <!-- fallback to input -->
+        <ng-template #textField>
+          <input
+            matInput
+            [type]="field.type || 'text'"
+            [formControlName]="field.name"
+          />
+        </ng-template>
+
+        <mat-error *ngIf="form.get(field.name)?.hasError('required')">
+          {{ field.label }} is required
+        </mat-error>
+      </mat-form-field>
+    </ng-container>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="form.invalid"
+  >
+    Save
+  </button>
+</mat-dialog-actions>
