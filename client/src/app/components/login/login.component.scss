@@ -1,0 +1,185 @@
+/* login.component.scss */
+:host {
+  display: block;
+  height: 100%;
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.auth-card-container {
+  width: 100%;
+  max-width: 500px;
+}
+
+.auth-card {
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  padding: 0;
+}
+
+.auth-header {
+  text-align: center;
+  padding: 30px 20px 20px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.app-subtitle {
+  margin: 10px 0 0;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.tab-content {
+  padding: 30px 24px;
+}
+
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border-radius: 22px;
+  font-weight: 500;
+
+  .social-icon {
+    margin-right: 8px;
+  }
+}
+
+.google-btn {
+  border-color: #d1d1d1;
+}
+
+.facebook-btn {
+  border-color: #3b5998;
+}
+
+.apple-btn {
+  border-color: #000;
+}
+
+.divider {
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background-color: #e0e0e0;
+    z-index: 1;
+  }
+
+  .divider-text {
+    background-color: white;
+    padding: 0 12px;
+    position: relative;
+    z-index: 2;
+    color: #6c757d;
+    font-size: 14px;
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.forgot-link {
+  color: var(--mat-sys-primary-fixed-dim);
+  text-decoration: none;
+  font-size: 14px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.terms-checkbox {
+  margin-bottom: 24px;
+  font-size: 14px;
+
+  .terms-link {
+    color: #3f51b5;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.submit-btn {
+  height: 46px;
+  border-radius: 23px;
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 599px) {
+  .auth-card {
+    border-radius: 0;
+    box-shadow: none;
+    height: 100vh;
+  }
+
+  .auth-container {
+    padding: 0;
+    background: white;
+  }
+
+  .auth-card-container {
+    max-width: 100%;
+  }
+}
+
+/* override Chrome autofill so it stays dark like the rest of your outline fields */
+input.mat-mdc-text-field-input:-webkit-autofill {
+  /* paint the “overlay” the same color as your form */
+  -webkit-box-shadow: 0 0 0px 1000px #2d2d2d inset;
+  box-shadow: 0 0 0px 1000px #2d2d2d inset;
+  /* keep the text readable */
+  -webkit-text-fill-color: #fff !important;
+  /* optional: prevent weird cut-off edges */
+  background-clip: content-box;
+}

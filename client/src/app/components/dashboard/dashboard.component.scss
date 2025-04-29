@@ -1,0 +1,14 @@
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+}
+
+app-sidebar {
+  flex: 0 0 240px;
+}
+
+.dashboard-content {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem 3rem;
+}

@@ -1,0 +1,41 @@
+.monkey-list-layout {
+  display: flex;
+  flex: 1;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.cards-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "monkeys shelters"
+    "monkeys species";
+  width: 100%;
+  height: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+
+  mat-card-content {
+    flex: 1;
+    overflow: auto;
+  }
+}
+
+.monkeys {
+  grid-area: monkeys;
+}
+
+.shelters {
+  grid-area: shelters;
+}
+
+.species {
+  grid-area: species;
+}

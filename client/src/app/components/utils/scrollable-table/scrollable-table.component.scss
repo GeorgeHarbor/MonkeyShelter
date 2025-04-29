@@ -1,0 +1,26 @@
+.table-container {
+  height: 100%;
+  overflow: auto;
+  max-height: 300px;
+}
+
+.scrollable-table {
+  background-color: unset;
+  max-height: 100px !important;
+
+}
+
+table {
+  width: 100%;
+  min-width: 600px;
+  /* force horizontal scroll if too many cols */
+}
+
+th.mat-header-cell,
+td.mat-cell {
+  padding: 0.5rem 1rem;
+}
+
+mat-icon {
+  font-size: 20px;
+}

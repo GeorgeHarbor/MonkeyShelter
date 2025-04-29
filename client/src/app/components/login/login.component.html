@@ -1,0 +1,145 @@
+<!-- login.component.html -->
+<div class="auth-container">
+  <div class="auth-card-container">
+    <mat-card class="auth-card">
+      <div class="auth-header">
+        <h1 class="app-title">🐒 Monkey Shleters</h1>
+
+        <p class="app-subtitle">Welcome back! Please login to your account.</p>
+      </div>
+
+      <mat-tab-group [selectedIndex]="selectedTabIndex" (selectedIndexChange)="selectedTabIndex = $event" mat-stretch-tabs="false" mat-align-tabs="center" animationDuration="300ms">
+        <!-- Login Tab -->
+        <mat-tab label="Login">
+          <div class="tab-content">
+
+            <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()" class="auth-form">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Username</mat-label>
+                <input matInput type="username" formControlName="userName" placeholder="Your username">
+                <mat-icon matSuffix>person</mat-icon>
+                <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
+                  Username is required
+                </mat-error>
+                <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+                  Please enter a valid email address
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Password</mat-label>
+                <input matInput [type]="hideLoginPassword ? 'password' : 'text'" formControlName="password" placeholder="Your password">
+                <button mat-icon-button matSuffix (click)="hideLoginPassword = !hideLoginPassword" type="button" aria-label="Toggle password visibility">
+                  <mat-icon>{{hideLoginPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+                  Password is required
+                </mat-error>
+                <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+                  Password must be at least 8 characters
+                </mat-error>
+              </mat-form-field>
+
+              <div class="form-footer">
+                <mat-checkbox formControlName="rememberMe" color="primary">Remember me</mat-checkbox>
+                <a href="#" class="forgot-link">Forgot password?</a>
+              </div>
+
+              <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid" class="submit-btn">
+                Sign In
+              </button>
+            </form>
+          </div>
+        </mat-tab>
+
+        <!-- Register Tab -->
+        <mat-tab label="Register">
+          <div class="tab-content">
+            <!-- Social Register Options -->
+
+            <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()" class="auth-form">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Username</mat-label>
+                <input matInput type="username" formControlName="userName" placeholder="Your username">
+                <mat-icon matSuffix>person</mat-icon>
+                <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
+                  Username is required
+                </mat-error>
+                <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+                  Please enter a valid email address
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Email</mat-label>
+                <input matInput type="email" formControlName="email" placeholder="Your email">
+                <mat-icon matSuffix>email</mat-icon>
+                <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
+                  Email is required
+                </mat-error>
+                <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
+                  Please enter a valid email address
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Password</mat-label>
+                <input matInput [type]="hideRegisterPassword ? 'password' : 'text'" formControlName="password" placeholder="Create a password">
+                <button mat-icon-button matSuffix (click)="hideRegisterPassword = !hideRegisterPassword" type="button" aria-label="Toggle password visibility">
+                  <mat-icon>{{hideRegisterPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
+                  Password is required
+                </mat-error>
+                <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
+                  Password must be at least 6 characters
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Confirm Password</mat-label>
+                <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" placeholder="Confirm your password">
+                <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button" aria-label="Toggle password visibility">
+                  <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
+                  Please confirm your password
+                </mat-error>
+                <mat-error *ngIf="registerForm.hasError('notMatching')">
+                  Passwords don't match
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Select Shelter</mat-label>
+                <mat-select formControlName="shelterId">
+                  <mat-option *ngFor="let shelter of shelters" [value] = "shelter.id">
+                    {{ shelter.name }}
+                  </mat-option>
+                </mat-select>
+
+                <mat-error *ngIf="registerForm.get('shelterId')?.hasError('required')">
+                  Shelter is required
+                </mat-error>
+              </mat-form-field>
+
+
+              <div class="terms-checkbox">
+                <mat-checkbox formControlName="acceptTerms" color="primary">
+                  I accept the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>
+                </mat-checkbox>
+                <mat-error *ngIf="registerForm.get('shelters')?.hasError('required') && registerForm.get('acceptTerms')?.touched">
+                  You must accept the terms and conditions
+                </mat-error>
+              </div>
+
+              <button mat-raised-button color="primary" type="submit" [disabled]="!registerForm.valid" class="submit-btn">
+                Create Account
+              </button>
+            </form>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  </div>
+</div>

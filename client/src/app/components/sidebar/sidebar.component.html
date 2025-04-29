@@ -1,0 +1,17 @@
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <h1 class="app-title sidebar-title">🐒 Monkey</h1>
+  </div>
+  <ul class="nav-list">
+    <li *ngFor="let item of navItems">
+      <a
+        class="nav-link"
+        [routerLink]="item.route"
+        [class.active]="isActive(item)"
+      >
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span class="link-text">{{ item.label }}</span>
+      </a>
+    </li>
+  </ul>
+</nav>

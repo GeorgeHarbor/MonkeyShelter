@@ -102,7 +102,6 @@ public static class AuthEndpoints
             );
         }
 
-        logger.LogError("RADI");
         await publisher.Publish(new UserRegistered(
                     Guid.Parse(user.Id),
                     user.Email,

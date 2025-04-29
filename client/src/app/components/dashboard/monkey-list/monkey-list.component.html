@@ -1,0 +1,43 @@
+<div class="monkey-list-layout">
+  <div class="cards-grid">
+    <mat-card class="card monkeys">
+      <mat-card-header>
+        <mat-card-title>Monkeys</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <scrollable-table
+          [columns]="[
+          { field: 'id',   header: 'ID' },
+          { field: 'name', header: 'Name' },
+          { field: 'age',  header: 'Age' }
+          ]"
+          [data]="monkeys"
+          [showActions]="true"
+          (edit)="onEdit($event)"
+          (delete)="onDelete($event)"
+          class="full-height"
+        ></scrollable-table>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card shelters">
+      <mat-card-header>
+        <mat-card-title>Shelters</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- your shelters table -->
+        <table>…</table>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="card species">
+      <mat-card-header>
+        <mat-card-title>Species</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- your species table -->
+        <table>…</table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
