@@ -173,7 +173,7 @@ docker compose up --build -d
 # Run Angular client
 cd client
 npm install
-ng serve --open
+ng serve
 ```
 
 ---
