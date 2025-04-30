@@ -1,0 +1,19 @@
+
+<div class="reports-list-layout">
+  <div class="cards-grid">
+    <mat-card class="card reports report1">
+      <mat-card-header class="reports-header">
+        <mat-card-title>Monkeys by species</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <scrollable-table
+          [columns]="columns"
+          [data]="logs"
+          [showActions]="false"
+        ></scrollable-table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="cards-grid">
+  </div>
+</div>

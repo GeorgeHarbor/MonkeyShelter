@@ -4,71 +4,49 @@
   padding: 16px;
   box-sizing: border-box;
   overflow: auto;
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+  flex-wrap: wrap;
 }
 
 .cards-grid {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-template-rows: 1fr 1fr;
-  grid-template-areas:
-    "monkeys shelters"
-    "monkeys species";
+  display: flex;
+  flex: 1;
   width: 100%;
   height: 100%;
+  flex-wrap: wrap;
+}
+
+.monkey1 .card {
+  flex: 1;
 }
 
 .card {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  border-radius: unset !important;
 
   mat-card-content {
     flex: 1;
     overflow: auto;
     max-height: 40vh;
+    min-height: 40vh;
   }
 }
 
-.monkeys {
-  grid-area: monkeys;
-
-  & mat-card-content {
-    max-height: 85vh;
+.report1 {
+  mat-card-content {
+    max-height: calc(40vh + 105px);
   }
 }
 
-.shelters {
-  grid-area: shelters;
-}
 
-.species {
-  grid-area: species;
-}
 
-@media (max-width: 1240px) {
-  .cards-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(3, auto);
-    grid-template-areas:
-      "monkeys"
-      "shelters"
-      "species";
-  }
 
-  .dashboard-sidebar {
-    display: none !important;
-  }
-}
 
 .monkey-header {
   display: flex;
   justify-content: space-between;
-}
-
-.card mat-card-header {
-  padding-bottom: 1rem;
-}
-
-.card .add-button {
-  cursor: pointer;
 }

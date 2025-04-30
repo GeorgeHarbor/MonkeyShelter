@@ -1,0 +1,93 @@
+.reports-list-layout {
+  display: flex;
+  flex: 1;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow: auto;
+  gap: 1rem;
+  width: 100%;
+}
+
+.cards-grid {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  mat-card-content {
+    flex: 1;
+    overflow: auto;
+    max-height: 40vh;
+    min-height: 40vh;
+  }
+}
+
+.report1 {
+  mat-card-content {
+    max-height: calc(40vh + 105px);
+  }
+}
+
+.dateRangeReports {
+  grid-area: reports2;
+}
+
+@media (max-width: 1240px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, auto);
+    grid-template-areas:
+      "reports"
+      "shelters"
+      "species";
+  }
+
+  .dashboard-sidebar {
+    display: none !important;
+  }
+}
+
+.reports-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card mat-card-header {
+  padding-bottom: 1rem;
+}
+
+.card .add-button {
+  cursor: pointer;
+}
+
+/* reports.component.scss */
+
+.report-card {
+  position: relative;
+  padding: 1rem;
+
+  .mat-card-title {
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+}
+
+.date-range-picker {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.5rem 1rem;
+
+  mat-form-field {
+    flex: 1;
+    /* pickers stretch to fill equally */
+    min-width: 180px;
+    /* but don’t shrink below this */
+  }
+
+}

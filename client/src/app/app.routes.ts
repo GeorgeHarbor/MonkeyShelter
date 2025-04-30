@@ -4,6 +4,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AuthGuard } from './utils/add-guard';
 import { MonkeyListComponent } from './components/dashboard/monkey-list/monkey-list.component';
 import { ReportsComponent } from './components/dashboard/reports/reports.component';
+import { AuditComponent } from './components/dashboard/audit/audit.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -13,7 +14,8 @@ export const routes: Routes = [
     component: DashboardComponent,
     children: [
       { path: '', component: MonkeyListComponent },
-      { path: 'reports', component: ReportsComponent }
+      { path: 'reports', component: ReportsComponent },
+      { path: 'audit', component: AuditComponent },
     ],
     canActivate: [AuthGuard]
   },

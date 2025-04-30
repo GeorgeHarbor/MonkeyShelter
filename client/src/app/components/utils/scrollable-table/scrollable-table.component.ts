@@ -5,6 +5,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SafeDatePipe } from '../../../utils/safe-date.pipe';
+import { FormsModule } from '@angular/forms';
 
 export interface ColumnDef {
   field: string;
@@ -14,7 +15,7 @@ export interface ColumnDef {
 @Component({
   selector: 'scrollable-table',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, SafeDatePipe],
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, SafeDatePipe, FormsModule],
   providers: [DatePipe],
   templateUrl: './scrollable-table.component.html',
   styleUrls: ['./scrollable-table.component.scss']

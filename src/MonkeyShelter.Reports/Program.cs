@@ -31,6 +31,11 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddMessaging(builder.Configuration);
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options => options.AddPolicy("AllowSpecificOrigins",
+        policy => policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials()));
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")!
@@ -65,7 +70,7 @@ app.MapGet("/reports/arrivals", async (
     var data = await svc.GetArrivalsInRangeAsync(from, to);
     return Results.Ok(data);
 });
-
+app.UseCors("AllowSpecificOrigins");
 app.UseHttpsRedirection();
 
 app.Run();

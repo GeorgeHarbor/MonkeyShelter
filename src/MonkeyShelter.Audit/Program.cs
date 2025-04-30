@@ -12,6 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AuditDbContext>(opts =>
     opts.UseNpgsql(builder.Configuration.GetConnectionString("AuditDatabase")));
 
+builder.Services.AddCors(options => options.AddPolicy("AllowSpecificOrigins",
+        policy => policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials()));
+
 builder.Services.AddMassTransit(x => x.UsingRabbitMq((context, cfg) =>
     {
         var rmq = builder.Configuration.GetSection("RabbitMq");
@@ -66,7 +72,6 @@ builder.Services.AddMassTransit(x => x.UsingRabbitMq((context, cfg) =>
            });
 
     }));
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -80,4 +85,14 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
+app.MapGet("", async () =>
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AuditDbContext>();
+        return await db.Set<AuditLog>().ToListAsync();
+    }
+    ;
+});
+app.UseCors("AllowSpecificOrigins");
 app.Run();
