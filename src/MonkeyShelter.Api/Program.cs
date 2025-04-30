@@ -1,8 +1,8 @@
-using System.Security.Claims;
 
 using Carter;
 
-using Microsoft.AspNetCore.Builder;
+using Delta;
+
 using Microsoft.EntityFrameworkCore;
 
 using MonkeyShelter.Api.Extensions;
@@ -18,11 +18,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<DataContext>(opt => opt.UseNpgsql(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+
 builder.Services.AddCors(options => options.AddPolicy("AllowSpecificOrigins",
         policy => policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials()));
+
 builder.Services
     .AddScoped(typeof(IRepository<>), typeof(Repository<>))
     .AddScoped<IUnitOfWork, UnitOfWork>();
@@ -35,6 +37,7 @@ builder.Services.AddCarter();
 builder.Services.AddAuth(builder.Configuration);
 builder.Services.AddMessaging(builder.Configuration);
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,6 +48,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MonkeyShelter.Api"));
 }
 app.UseCors("AllowSpecificOrigins");
+
+app.UseDelta();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapCarter();
