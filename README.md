@@ -203,7 +203,7 @@ ng serve
 
 ## 🔧 TODO / Improvements
 
-- [ ] Add **pagination** and **sorting** to monkey list
-- [ ] Enhance **error handling** on frontend forms
+- [ ] Comments
+- [ ] Logging
 - [ ] Implement **role-based access control** for managers and shelters
-- [ ] Add **integration tests**
+- [ ] Add more tests
