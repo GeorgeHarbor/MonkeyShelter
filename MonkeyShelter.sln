@@ -21,6 +21,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonkeyShelter.Audit", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonkeyShelter.Reports", "src\MonkeyShelter.Reports\MonkeyShelter.Reports.csproj", "{781C223F-097D-4719-AD3E-5728160BB4CC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CEA09484-30F6-4D44-02F6-822E06DBC57C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonkeyShelter.Application.Tests.Unit", "src\tests\MonkeyShelter.Application.Tests.Unit\MonkeyShelter.Application.Tests.Unit.csproj", "{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MonkeyShelter.Infrastructure.Tests.Integration", "MonkeyShelter.Infrastructure.Tests.Integration", "{07F5E25F-7700-2344-7825-E563E11B6987}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonkeyShelter.Infrastructure.Tests.Integration", "src\tests\MonkeyShelter.Infrastructure.Tests.Integration\MonkeyShelter.Infrastructure.Tests.Integration\MonkeyShelter.Infrastructure.Tests.Integration.csproj", "{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,6 +135,30 @@ Global
 		{781C223F-097D-4719-AD3E-5728160BB4CC}.Release|x64.Build.0 = Release|Any CPU
 		{781C223F-097D-4719-AD3E-5728160BB4CC}.Release|x86.ActiveCfg = Release|Any CPU
 		{781C223F-097D-4719-AD3E-5728160BB4CC}.Release|x86.Build.0 = Release|Any CPU
+		{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB}.Debug|x64.Build.0 = Debug|Any CPU
+		{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB}.Debug|x86.Build.0 = Debug|Any CPU
+		{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB}.Release|x64.ActiveCfg = Release|Any CPU
+		{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB}.Release|x64.Build.0 = Release|Any CPU
+		{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB}.Release|x86.ActiveCfg = Release|Any CPU
+		{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB}.Release|x86.Build.0 = Release|Any CPU
+		{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB}.Debug|x64.Build.0 = Debug|Any CPU
+		{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB}.Debug|x86.Build.0 = Debug|Any CPU
+		{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB}.Release|x64.ActiveCfg = Release|Any CPU
+		{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB}.Release|x64.Build.0 = Release|Any CPU
+		{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB}.Release|x86.ActiveCfg = Release|Any CPU
+		{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,5 +172,9 @@ Global
 		{F0423BC2-2DD5-4BA3-A3F3-33E5BD42137E} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{AA476739-DABF-4096-9073-1F2B705CFFDF} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{781C223F-097D-4719-AD3E-5728160BB4CC} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{CEA09484-30F6-4D44-02F6-822E06DBC57C} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{1E725976-C2DD-4EA6-99C3-8008F4A7CBBB} = {CEA09484-30F6-4D44-02F6-822E06DBC57C}
+		{07F5E25F-7700-2344-7825-E563E11B6987} = {CEA09484-30F6-4D44-02F6-822E06DBC57C}
+		{1096E3A9-1A61-4D99-9907-22EA2DC8D4EB} = {07F5E25F-7700-2344-7825-E563E11B6987}
 	EndGlobalSection
 EndGlobal

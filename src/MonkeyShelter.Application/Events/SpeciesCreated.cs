@@ -6,7 +6,8 @@ public record SpeciesCreated(
         string Description,
         DateTime CreatedAt
         );
-public record ShelterUpdated(
+
+public record SpeciesUpdated(
         Guid SpeciesId,
         string Name,
         string Description,

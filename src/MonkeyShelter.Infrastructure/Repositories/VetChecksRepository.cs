@@ -18,11 +18,12 @@ public class VetChecksRepository(DataContext ctx) : Repository<VetCheckSchedule>
                          .ToListAsync();
     }
 
-    public async Task<List<VetCheckSchedule>> GetByIdWithIncludesAsync(Guid id)
+    public async Task<VetCheckSchedule> GetByIdWithIncludesAsync(Guid id, CancellationToken ct = default)
     {
         return await _ctx.Set<VetCheckSchedule>()
                          .Include(m => m.Monkey)
                          .Where(m => m.Id == id)
-                         .ToListAsync();
+                         .FirstAsync(ct);
     }
+
 }
