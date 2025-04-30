@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MonkeyShelter.Infrastructure\MonkeyShelter.Infrastructure.csproj" />
-    <ProjectReference Include="..\MonkeyShelter.Application\MonkeyShelter.Application.csproj" />
   </ItemGroup>
 
 </Project>
