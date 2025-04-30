@@ -57,9 +57,12 @@ services:
       context: .
       dockerfile: src/MonkeyShelter.Audit/Dockerfile
     image: monkeyshelter-audit:latest
+    ports:
+      - "5247:5247"
     environment:
       - ConnectionStrings__AuditDatabase=Host=postgres;Port=5432;Database=monkeyaudit;Username=user;Password=pass;
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5247
       - RabbitMq__Host=rabbitmq://rabbitmq:5672
       - RabbitMq__Username=user
       - RabbitMq__Password=pass

@@ -20,6 +20,6 @@ WORKDIR /app
 COPY --from=build /app/publish .
 
 # Expose port and start
-ENV ASPNETCORE_URLS=http://+:80
-EXPOSE 80
+ENV ASPNETCORE_URLS=http://+:5247
+EXPOSE 5247
 ENTRYPOINT ["dotnet", "MonkeyShelter.Audit.dll"]
