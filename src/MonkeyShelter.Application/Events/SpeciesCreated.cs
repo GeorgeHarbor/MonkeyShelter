@@ -1,15 +1,14 @@
 namespace MonkeyShelter.Application.Events;
 
-public record ShelterCreated(
-        Guid ShelterId,
+public record SpeciesCreated(
+        Guid SpeciesId,
         string Name,
-        string Location,
+        string Description,
         DateTime CreatedAt
         );
-
 public record ShelterUpdated(
-        Guid ShelterId,
+        Guid SpeciesId,
         string Name,
-        string Location,
+        string Description,
         DateTime CreatedAt
         );
