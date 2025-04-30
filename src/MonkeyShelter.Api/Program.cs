@@ -1,7 +1,6 @@
 
 using Carter;
 
-using Delta;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -49,7 +48,6 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("AllowSpecificOrigins");
 
-app.UseDelta();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapCarter();
