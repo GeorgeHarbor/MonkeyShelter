@@ -1,14 +1,9 @@
 # 🐒 Monkey Shelter Management System
 
-## DISCLAIMER
-Client, along with the unit tests, I managed to lose because I didn’t commit on time. In the meantime, an update on my Arch system somehow (I don’t even know how) deleted the files. I have screenshots, and I’m currently trying to recover some data. Please, I kindly ask for more time.
-
-![screenshot](./slika.png) 
-
 ## 🔗 Overview
 This project is a **full-stack Monkey Shelter Management System** built with:
 
-- **Backend**: ASP.NET Core 9, MassTransit, RabbitMQ, PostgreSQL
+- **Backend**: ASP.NET Core 9, MassTransit, RabbitMQ, PostgreSQL, Redis
 - **Frontend**: Angular 19, Angular Material UI
 
 ### Core Features:
@@ -32,7 +27,7 @@ The system follows a **microservices architecture** with the following component
 - **Worker Services (`MonkeyShelter.Workers`)**: Background services, such as the Vet Scheduler, that operate independently of user requests.
 - **RabbitMQ**: Message broker used for decoupled communication between services.
 - **PostgreSQL**: Central database used by the API and reporting service.
-- Redis: A cache layer implemented with smart cache
+- **Redis**: A cache layer implemented with smart invalidation
 
 ### Communication Flow:
 1. **Frontend** interacts with the **API Gateway** for monkey management.
@@ -73,9 +68,10 @@ This ensures:
 ## 🛠️ Backend Setup
 
 ### Tech Stack:
-- **.NET 8** (Minimal APIs, Dependency Injection)
+- **.NET 9** (Minimal APIs, Dependency Injection)
 - **MassTransit + RabbitMQ** (Message-based communication)
 - **PostgreSQL** (Database)
+- **Redis** (Cache)
 - **Entity Framework Core** (Data access)
 
 ### Projects:
@@ -95,8 +91,8 @@ This ensures:
 |----------------------------------|--------|---------------------------------------|
 | `/monkeys`                       | GET    | List all monkeys                      |
 | `/monkeys`                       | POST   | Add a new monkey                      |
-| `/monkeys/create/departure`      | DELETE | Depart a monkey (with body payload)   |
-| `/monkeys/update/weight`         | PUT    | Update a monkey's weight              |
+| `/monkeys/`      | DELETE | Depart a monkey (with body payload)   |
+| `/monkeys/`         | PUT    | Update a monkey's weight              |
 | `/species`                       | GET    | List species                          |
 | `/shelters`                      | GET    | List shelters                         |
 
@@ -112,8 +108,8 @@ This ensures:
 - `LoginComponent` / `RegisterComponent` (Auth forms)
 - `DashboardComponent` (Main user area)
 - `MonkeyListComponent` (CRUD interface for monkeys)
-- `AddMonkeyDialog` (Dialog for adding monkeys)
-- `EditMonkeyDialog` (Dialog for updating monkey weight)
+- `ReportsComponent` (Displays reports -> all and in date rage)
+- `AuditComponent` (Displays all audit logs)
 
 ### Features:
 - 🔐 **JWT Authentication**
